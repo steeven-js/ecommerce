@@ -65,8 +65,6 @@ export default function Nav({ open, onClose }) {
   // Auth info
   const { user } = useAuth();
 
-  console.log("User:", user)
-
   // Logout function
   const handleLogout = () => {
     signOut(auth).then(() => {

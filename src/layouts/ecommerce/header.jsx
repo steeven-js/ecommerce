@@ -10,6 +10,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useAuth } from 'src/hooks/use-auth';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
 
@@ -28,6 +29,9 @@ export default function Header() {
   const mdUp = useResponsive('up', 'md');
 
   const menuOpen = useBoolean();
+
+  // Auth check
+  const { user } = useAuth();
 
   return (
     <Box
@@ -110,9 +114,10 @@ export default function Header() {
             </IconButton>
           </Badge>
 
+          {/* Login ou account */}
           <IconButton
             component={RouterLink}
-            href={paths.eCommerce.account.personal}
+            href={user ? paths.eCommerce.account.personal : paths.loginBackground}
             size="small"
             color="inherit"
             sx={{ p: 0 }}
