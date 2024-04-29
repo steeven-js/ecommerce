@@ -10,6 +10,7 @@ import { useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 
+import { useAuth } from 'src/hooks/use-auth';
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 import { useResponsive } from 'src/hooks/use-responsive';
 
@@ -34,104 +35,38 @@ export default function Header({ headerOnDark }) {
 
   const mdUp = useResponsive('up', 'md');
 
-  const renderContent = (
-    <>
-      <Box sx={{ lineHeight: 0, position: 'relative' }}>
-        <Logo />
+  // Auth check
+  const { user } = useAuth();
 
-        <Link href="https://zone-docs.vercel.app/changelog" target="_blank" rel="noopener">
-          <Label
-            color="info"
-            sx={{
-              ml: 0.5,
-              px: 0.5,
-              top: -14,
-              left: 60,
-              height: 20,
-              fontSize: 11,
-              cursor: 'pointer',
-              position: 'absolute',
-            }}
-          >
-            v2.4.0
-          </Label>
-        </Link>
-      </Box>
-
-      <>
-        <Stack
-          flexGrow={1}
-          alignItems="center"
-          sx={{
-            display: { xs: 'none', md: 'flex' },
-          }}
-        >
-          <NavBasicDesktop
-            slotProps={{
-              rootItem: {
-                '& .icon': { display: 'none' },
-              },
-            }}
-            data={[
-              {
-                title: 'Home',
-                icon: <Iconify icon="solar:home-2-bold-duotone" />,
-                path: '/',
-              },
-              { title: 'Login', path: paths.loginBackground },
-              { title: 'Register', path: paths.registerBackground },
-              {
-                title: 'Docs',
-                icon: <Iconify icon="solar:notebook-bold-duotone" />,
-                path: paths.docs,
-              },
-            ]}
-          />
-        </Stack>
-
-        <Box sx={{ flexGrow: { xs: 1, md: 'unset' } }} />
-      </>
-
-      <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-end">
-        <Stack spacing={1} direction="row" alignItems="center">
-          {/* <Searchbar /> */}
-
-          <SettingsButton />
-        </Stack>
-
-        {/* <Button
-          variant="contained"
-          color="inherit"
-          href={paths.zoneStore}
-          target="_blank"
-          rel="noopener"
-          sx={{
-            display: { xs: 'none', md: 'inline-flex' },
-          }}
-        >
-          Buy Now
-        </Button> */}
-      </Stack>
-
-      {!mdUp &&
-        <NavMobile
-          data={[
-            {
-              title: 'Home',
-              icon: <Iconify icon="solar:home-2-bold-duotone" />,
-              path: '/',
-            },
-            { title: 'Login', path: paths.loginBackground },
-            { title: 'Register', path: paths.registerBackground },
-            {
-              title: 'Docs',
-              icon: <Iconify icon="solar:notebook-bold-duotone" />,
-              path: paths.docs,
-            },
-          ]}
-        />
-      }
-    </>
+  const navData = user ? (
+    [
+      {
+        title: 'Home',
+        icon: <Iconify icon="solar:home-2-bold-duotone" />,
+        path: '/',
+      },
+      { title: 'Account', path: paths.eCommerce.account.personal }, // Remplacer 'Logout' par votre chemin de déconnexion
+      {
+        title: 'Docs',
+        icon: <Iconify icon="solar:notebook-bold-duotone" />,
+        path: paths.docs,
+      },
+    ]
+  ) : (
+    [
+      {
+        title: 'Home',
+        icon: <Iconify icon="solar:home-2-bold-duotone" />,
+        path: '/',
+      },
+      { title: 'Login', path: paths.loginBackground },
+      { title: 'Register', path: paths.registerBackground },
+      {
+        title: 'Docs',
+        icon: <Iconify icon="solar:notebook-bold-duotone" />,
+        path: paths.docs,
+      },
+    ]
   );
 
   return (
@@ -167,7 +102,75 @@ export default function Header({ headerOnDark }) {
             justifyContent: 'center',
           }}
         >
-          {renderContent}
+          <Box sx={{ lineHeight: 0, position: 'relative' }}>
+            <Logo />
+
+            <Link href="https://zone-docs.vercel.app/changelog" target="_blank" rel="noopener">
+              <Label
+                color="info"
+                sx={{
+                  ml: 0.5,
+                  px: 0.5,
+                  top: -14,
+                  left: 60,
+                  height: 20,
+                  fontSize: 11,
+                  cursor: 'pointer',
+                  position: 'absolute',
+                }}
+              >
+                v2.4.0
+              </Label>
+            </Link>
+          </Box>
+
+          {mdUp && (
+            <Stack
+              flexGrow={1}
+              alignItems="center"
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+              }}
+            >
+              <NavBasicDesktop
+                slotProps={{
+                  rootItem: {
+                    '& .icon': { display: 'none' },
+                  },
+                }}
+                data={navData}
+              />
+            </Stack>
+          )}
+
+          <Box sx={{ flexGrow: { xs: 1, md: 'unset' } }} />
+
+          <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-end">
+            <Stack spacing={1} direction="row" alignItems="center">
+              {/* <Searchbar /> */}
+
+              <SettingsButton />
+            </Stack>
+
+            {/* <Button
+              variant="contained"
+              color="inherit"
+              href={paths.zoneStore}
+              target="_blank"
+              rel="noopener"
+              sx={{
+                display: { xs: 'none', md: 'inline-flex' },
+              }}
+            >
+              Buy Now
+            </Button> */}
+          </Stack>
+
+          {!mdUp && (
+            <NavMobile
+              data={navData}
+            />
+          )}
         </Container>
       </Toolbar>
 
@@ -175,6 +178,7 @@ export default function Header({ headerOnDark }) {
     </AppBar>
   );
 }
+
 
 Header.propTypes = {
   headerOnDark: PropTypes.bool,
