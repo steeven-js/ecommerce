@@ -108,10 +108,10 @@ export default function Nav({ open, onClose }) {
 
         <Stack spacing={0.5}>
           <TextMaxLine variant="subtitle1" line={1}>
-            {user.displayName ? user.displayName : 'Anonymous'}
+            {user && user.displayName ? user.displayName : 'Anonymous'}
           </TextMaxLine>
           <TextMaxLine variant="body2" line={1} sx={{ color: 'text.secondary' }}>
-            {user.email ? user.email : 'Not set'}
+            {user && user.email ? user.email : 'Not set'}
           </TextMaxLine>
         </Stack>
       </Stack>
