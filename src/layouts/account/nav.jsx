@@ -16,6 +16,7 @@ import { paths } from 'src/routes/paths';
 import { useActiveLink } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
+import { useAuth } from 'src/hooks/use-auth';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { _mock } from 'src/_mock';
@@ -61,7 +62,12 @@ export default function Nav({ open, onClose }) {
   const mdUp = useResponsive('up', 'md');
   const navigate = useNavigate();
 
+  // Auth info
+  const { user } = useAuth();
 
+  console.log("User:", user)
+
+  // Logout function
   const handleLogout = () => {
     signOut(auth).then(() => {
       navigate("/");
@@ -102,10 +108,10 @@ export default function Nav({ open, onClose }) {
 
         <Stack spacing={0.5}>
           <TextMaxLine variant="subtitle1" line={1}>
-            Jayvion Simon
+            {user.displayName ? user.displayName : 'Anonymous'}
           </TextMaxLine>
           <TextMaxLine variant="body2" line={1} sx={{ color: 'text.secondary' }}>
-            nannie_abernathy70@yahoo.com
+            {user.email ? user.email : 'Not set'}
           </TextMaxLine>
         </Stack>
       </Stack>
