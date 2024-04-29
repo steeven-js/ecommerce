@@ -36,7 +36,7 @@ export default function Header({ headerOnDark }) {
   const mdUp = useResponsive('up', 'md');
 
   // Auth check
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   const navData = user ? (
     [
@@ -132,14 +132,16 @@ export default function Header({ headerOnDark }) {
                 display: { xs: 'none', md: 'flex' },
               }}
             >
-              <NavBasicDesktop
-                slotProps={{
-                  rootItem: {
-                    '& .icon': { display: 'none' },
-                  },
-                }}
-                data={navData}
-              />
+              {!loading && (
+                <NavBasicDesktop
+                  slotProps={{
+                    rootItem: {
+                      '& .icon': { display: 'none' },
+                    },
+                  }}
+                  data={navData}
+                />
+              )}
             </Stack>
           )}
 
@@ -166,7 +168,7 @@ export default function Header({ headerOnDark }) {
             </Button> */}
           </Stack>
 
-          {!mdUp && (
+          {!mdUp && !loading && (
             <NavMobile
               data={navData}
             />

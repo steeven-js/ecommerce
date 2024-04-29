@@ -26,6 +26,10 @@ const GENDER_OPTIONS = ['Male', 'Female', 'Other'];
 export default function EcommerceAccountPersonalView() {
   const passwordShow = useBoolean();
 
+  // const { user } = useAuth();
+
+  // console.log('USER', user)
+
   const EcommerceAccountPersonalSchema = Yup.object().shape({
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),

@@ -1,9 +1,10 @@
+import axios from 'axios';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
@@ -66,6 +67,8 @@ export default function RegisterBackgroundView() {
     formState: { isSubmitting },
   } = methods;
 
+  const apiUrl = import.meta.env.VITE_CUSTOMER_API_URL;
+
   const onSubmit = handleSubmit(async (data) => {
     try {
 
@@ -74,6 +77,13 @@ export default function RegisterBackgroundView() {
       setPasswordError('');
 
       await createUserWithEmailAndPassword(auth, data.email, data.password);
+
+      if (auth.currentUser) {
+        await axios.post(apiUrl, {
+          uid: auth.currentUser.uid,
+          email: data.email,
+        });
+      }
 
       console.log('User created successfully!');
 
@@ -87,11 +97,12 @@ export default function RegisterBackgroundView() {
       // Display error messages based on the type of error
       if (error.code === 'auth/invalid-email') {
         setEmailError('Adresse e-mail invalide');
+      } else if (error.code === 'auth/email-already-in-use') {
+        setEmailError('Adresse e-mail déjà utilisée');
       } else if (error.code === 'auth/invalid-credential') {
         setPasswordError('Mot de passe incorrect');
-      } else {
-        // Example: alert('Une erreur s\'est produite lors de la connexion');
-        // auth/too-many-requests]
+      } else if (error.code === 'auth/too-many-requests') {
+        setPasswordError('Trop de tentatives de connexion infructueuses. Réessayez plus tard');
       }
     }
   });
