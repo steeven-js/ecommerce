@@ -2,71 +2,56 @@ import PropTypes from 'prop-types';
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Masonry from '@mui/lab/Masonry';
-import Stack from '@mui/material/Stack';
 import Popover from '@mui/material/Popover';
-import Divider from '@mui/material/Divider';
 
 import { usePathname, useActiveLink } from 'src/routes/hooks';
 
 import { hideScroll } from 'src/theme/css';
 
 import NavItem from './nav-item';
-import MenuTags from '../common/menu-tags';
 import NavSubList from '../common/nav-sub-list';
-import MenuProducts from '../common/menu-products';
-import MenuMoreLink from '../common/menu-more-link';
-
-// ----------------------------------------------------------------------
 
 export default function NavList({ data, slotProps }) {
   const navRef = useRef(null);
-
   const pathname = usePathname();
-
-  const active = useActiveLink(data.path, !!data.children);
-
-  const singleList = data.children?.length === 1;
+  const active = useActiveLink(data.path, !!data.subcategories);
 
   const [openMenu, setOpenMenu] = useState(false);
-
   const [rectTop, setRectTop] = useState(0);
 
   useEffect(() => {
     if (openMenu) {
       handleCloseMenu();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
       const element = navRef.current;
-
       if (element) {
         const clientRect = element.getBoundingClientRect();
-
         setRectTop(clientRect.top + clientRect.height);
       }
     };
 
     handleScroll();
-
     window.addEventListener('scroll', handleScroll);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   const handleOpenMenu = useCallback(() => {
-    if (data.children) {
+    if (data.subcategories) {
       setOpenMenu(true);
     }
-  }, [data.children]);
+  }, [data.subcategories]);
 
   const handleCloseMenu = useCallback(() => {
     setOpenMenu(false);
   }, []);
+
+  const singleList = data.subcategories && data.subcategories.length === 1;
 
   return (
     <>
@@ -75,20 +60,15 @@ export default function NavList({ data, slotProps }) {
         open={openMenu}
         onMouseEnter={handleOpenMenu}
         onMouseLeave={handleCloseMenu}
-        //
-        title={data.title}
-        path={data.path}
-        icon={data.icon}
-        //
-        hasChild={!!data.children}
-        externalLink={data.path.includes('http')}
-        //
+        title={data.name}
+        path={data.path || '#'}
+        hasChild={!!data.subcategories}
         active={active}
         className={active ? 'active' : ''}
         sx={slotProps?.rootItem}
       />
 
-      {!!data.children && (
+      {!!data.subcategories && (
         <Popover
           disableScrollLock
           open={openMenu}
@@ -131,32 +111,12 @@ export default function NavList({ data, slotProps }) {
           }}
         >
           {singleList ? (
-            <NavSubList data={data.children} slotProps={slotProps} />
+            <NavSubList data={data.subcategories} slotProps={slotProps} />
           ) : (
             <Masonry columns={4} spacing={3} defaultColumns={4} defaultSpacing={3}>
-              <NavSubList data={data.children} slotProps={slotProps} sx={{ mb: 2.5 }} />
+              <NavSubList data={data.subcategories} slotProps={slotProps} sx={{ mb: 2.5 }} />
             </Masonry>
           )}
-
-          <Stack spacing={3}>
-            {!!data.moreLink && (
-              <MenuMoreLink path={data.moreLink.path} title={data.moreLink.title} />
-            )}
-
-            {!!data.products && (
-              <>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuProducts products={data.products} displayProduct={slotProps?.displayProduct} />
-              </>
-            )}
-
-            {!!data.tags && (
-              <>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuTags tags={data.tags} />
-              </>
-            )}
-          </Stack>
         </Popover>
       )}
     </>
@@ -164,6 +124,10 @@ export default function NavList({ data, slotProps }) {
 }
 
 NavList.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    path: PropTypes.string,
+    subcategories: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
   slotProps: PropTypes.object,
 };

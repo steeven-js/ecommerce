@@ -17,9 +17,10 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
+import { useNavigationData } from 'src/hooks/use-navigation-data';
 import { MegaMenuMobile, MegaMenuDesktopHorizontal } from 'src/components/mega-menu';
 
-import { data } from './config-navigation';
+// import { data } from './config-navigation';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,8 @@ export default function Header() {
 
   // Auth check
   const { user } = useAuth();
+
+  const { data } = useNavigationData();
 
   return (
     <Box
