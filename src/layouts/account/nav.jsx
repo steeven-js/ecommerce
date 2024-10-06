@@ -19,12 +19,13 @@ import { RouterLink } from 'src/routes/components';
 import { useAuth } from 'src/hooks/use-auth';
 import { useResponsive } from 'src/hooks/use-responsive';
 
+import { auth } from 'src/utils/firebase';
+
 import { _mock } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import TextMaxLine from 'src/components/text-max-line';
 
-import { auth } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 

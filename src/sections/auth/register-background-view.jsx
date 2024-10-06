@@ -23,7 +23,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
-import { auth } from "../../../firebase";
+import { auth } from "../../utils/firebase";
 
 // ----------------------------------------------------------------------
 
