@@ -20,7 +20,7 @@ export default function MegaMenuDesktopHorizontal({ data, sx, slotProps, ...othe
       {...other}
     >
       {data.map((list) => (
-        <NavList key={list.name} data={list} slotProps={slotProps} />
+        <NavList key={list.title} data={list} slotProps={slotProps} />
       ))}
     </Stack>
   );

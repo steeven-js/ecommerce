@@ -4,66 +4,64 @@ import { addDoc, collection, getFirestore } from 'firebase/firestore';
 
 import { Alert, Button, AlertTitle } from '@mui/material';
 
+import Iconify from 'src/components/iconify';
+
 // Initialiser Firebase
 const db = getFirestore();
 
-const categoriesData = {
-  "categories": [
-    {
-      "name": "Hommes",
-      "subcategories": [
-        "Tops",
-        "Bas",
-        "Vestes & Sweats",
-        "Chaussures",
-        "Accessoires",
-        "Performance"
-      ]
-    },
-    {
-      "name": "Femmes",
-      "subcategories": [
-        "Tops",
-        "Bas",
-        "Vestes & Sweats",
-        "Chaussures",
-        "Accessoires",
-        "Performance"
-      ]
-    },
-    {
-      "name": "Enfants",
-      "subcategories": [
-        "Garçons",
-        "Filles",
-        "Bébés",
-        "Chaussures",
-        "Accessoires",
-        "Performance Junior"
-      ]
-    },
-    {
-      "name": "Sports",
-      "subcategories": [
-        "Football",
-        "Running",
-        "Training",
-        "Tennis",
-        "Basketball",
-        "Natation"
-      ]
-    },
-    {
-      "name": "Collections",
-      "subcategories": [
-        "Nouveautés",
-        "Collaborations",
-        "Éditions limitées",
-        "Éco-responsable"
-      ]
-    }
-  ]
-};
+const categoriesData = [
+  {
+    path: '#',
+    title: 'Categories',
+    icon: <Iconify icon="carbon:menu" sx={{ width: 1, height: 1 }} />,
+    children: [
+      {
+        subheader: 'Collection',
+        items: [
+          { title: 'Nouvelle Collection', path: '#' },
+          { title: 'Tendances', path: '#' },
+          { title: 'Classiques', path: '#' },
+        ],
+      },
+      {
+        subheader: 'Hommes',
+        items: [
+          { title: 'T-shirts', path: '#' },
+          { title: 'Pantalons', path: '#' },
+          { title: 'Sweats', path: '#' },
+          { title: 'Vestes', path: '#' },
+        ],
+      },
+      {
+        subheader: 'Femmes',
+        items: [
+          { title: 'Robes', path: '#' },
+          { title: 'Tops', path: '#' },
+          { title: 'Jupes', path: '#' },
+          { title: 'Leggings', path: '#' },
+        ],
+      },
+      {
+        subheader: 'Chaussures',
+        items: [
+          { title: 'Running', path: '#' },
+          { title: 'Basketball', path: '#' },
+          { title: 'Training', path: '#' },
+          { title: 'Lifestyle', path: '#' },
+        ],
+      },
+      {
+        subheader: 'Accessoires',
+        items: [
+          { title: 'Sacs', path: '#' },
+          { title: 'Casquettes', path: '#' },
+          { title: 'Chaussettes', path: '#' },
+          { title: 'Équipement de sport', path: '#' },
+        ],
+      },
+    ],
+  },
+];
 
 const EcommerceLandingView = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +73,9 @@ const EcommerceLandingView = () => {
     setMessage('');
     try {
       const categoriesRef = collection(db, 'categories');
-      await Promise.all(categoriesData.categories.map(category => addDoc(categoriesRef, category)));
+      await Promise.all(
+        categoriesData.categories.map((category) => addDoc(categoriesRef, category))
+      );
       setMessage('Collection créée avec succès dans Firebase!');
       setSeverity('success');
     } catch (error) {
@@ -109,12 +109,12 @@ const EcommerceLandingView = () => {
 };
 
 const HomePage = () => (
-    <>
-      <Helmet>
-        <title>E-commerce Sportswear - Accueil</title>
-      </Helmet>
-      <EcommerceLandingView />
-    </>
-  );
+  <>
+    <Helmet>
+      <title>E-commerce Sportswear - Accueil</title>
+    </Helmet>
+    <EcommerceLandingView />
+  </>
+);
 
 export default HomePage;

@@ -25,7 +25,7 @@ const NavItem = forwardRef(
       >
         {icon && (
           <Box component="span" className="icon">
-            {icon}
+            <Iconify icon={icon} sx={{ width: 1, height: 1 }} />
           </Box>
         )}
 
@@ -58,7 +58,7 @@ NavItem.propTypes = {
   open: PropTypes.bool,
   active: PropTypes.bool,
   path: PropTypes.string,
-  icon: PropTypes.element,
+  icon: PropTypes.string,
   title: PropTypes.string,
   hasChild: PropTypes.bool,
   externalLink: PropTypes.bool,
