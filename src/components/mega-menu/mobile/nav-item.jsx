@@ -18,7 +18,7 @@ const NavItem = forwardRef(
       <StyledNavItem ref={ref} active={active} {...other}>
         {icon && (
           <Box component="span" className="icon">
-            {icon}
+            <Iconify icon={icon} sx={{ width: 1, height: 1 }} />
           </Box>
         )}
 

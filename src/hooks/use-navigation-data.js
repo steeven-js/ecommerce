@@ -1,9 +1,6 @@
-import { useState, useEffect } from "react";
-import { getDocs, collection } from "firebase/firestore";
-
-import { db } from "src/utils/firebase";
-
-// ----------------------------------------------------------------------
+import { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from 'src/utils/firebase';
 
 export const useNavigationData = () => {
   const [data, setData] = useState([]);
@@ -11,24 +8,33 @@ export const useNavigationData = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchNavigationData = async () => {
       try {
-        const categoriesCollection = collection(db, 'categories');
-        const categoriesSnapshot = await getDocs(categoriesCollection);
-        const categoriesData = categoriesSnapshot.docs.map(doc => ({
+        const categoriesRef = collection(db, 'categories');
+        const categoriesSnap = await getDocs(categoriesRef);
+
+        const navigationData = categoriesSnap.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          title: doc.data().name,
+          path: `/category/${doc.id}`,
+          children: doc.data().subcategories?.map(sub => ({
+            subheader: sub.name,
+            items: sub.items?.map(item => ({
+              title: item.name,
+              path: `/category/${doc.id}/${item.slug}`
+            })) || []
+          })) || []
         }));
-        setData(categoriesData);
-        setLoading(false);
+
+        setData(navigationData);
       } catch (err) {
-        console.error("Erreur lors de la récupération des données:", err);
         setError(err);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchNavigationData();
   }, []);
 
   return { data, loading, error };

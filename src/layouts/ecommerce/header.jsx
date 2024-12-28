@@ -34,7 +34,13 @@ export default function Header() {
   // Auth check
   const { user } = useAuth();
 
-  const { data } = useNavigationData();
+  // Utilisation du hook avec gestion du chargement
+  const { data, loading } = useNavigationData();
+
+  // Si les données sont en cours de chargement, on peut afficher un loader ou rien
+  if (loading) {
+    return null; // ou un composant de chargement
+  }
 
   return (
     <Box
